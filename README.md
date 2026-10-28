@@ -7,24 +7,28 @@
 ```
 recommender-demo/
 ├── itemcf_recall.py   # Day1：ItemCF 召回基线（Recall@20 / NDCG@10）
+├── fuse_recall.py     # Day2：四路召回对比（ItemCF / 手写 ALS / 试错）+ 加权融合
 ├── notes.md           # 数字账本（简历 XX% 从这里取）
 ├── data/ml-1m/        # MovieLens-1M（ratings/movies/users）
-└── （待加）itemmf_recall.py / fuse_recall.py / deepfm_sort.py
+└── （待加）deepfm_sort.py
 ```
 
 ## 跑法
 
 ```powershell
 cd D:\code\project\recommender-demo
-& 'D:\download\miniconda3\envs\stats\python.exe' itemcf_recall.py
+& 'D:\download\miniconda3\envs\stats\python.exe' itemcf_recall.py   # 单路 ItemCF
+& 'D:\download\miniconda3\envs\stats\python.exe' fuse_recall.py     # 四路对比 + 融合
 ```
 
 数据说明：MovieLens-1M 从 <https://files.grouplens.org/datasets/movielens/ml-1m.zip> 下载后解压到 `data/ml-1m/`（仓库不包含数据文件）。
 
-## 当前指标（2026-10-27 Day1）
+## 当前指标（2026-10-28 Day2，同批同口径）
 
 | 方法 | Recall@20 | NDCG@10 |
 |---|---|---|
 | ItemCF（基线） | 0.1636 | 0.5234 |
+| ItemMF-ALS（手写隐式） | 0.1491 | 0.4577 |
+| **加权融合（w=0.4）** | **0.1941** | **0.5644** |
 
-详细口径见 `notes.md`。
+召回融合 Recall@20 +18.6%（0.164→0.194）。详细口径与试错记录见 `notes.md`。
