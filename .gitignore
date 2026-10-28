@@ -7,5 +7,5 @@ __pycache__/
 .ipynb_checkpoints/
 
 # 运行日志/截图（本地证据，不进 git）
-run_log*.txt
+*run_log.txt
 *.png
