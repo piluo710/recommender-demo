@@ -1,6 +1,0 @@
-{
-  "test_recall20": 0.1443,
-  "test_ndcg10": 0.0416,
-  "n_users": 20000,
-  "recent": 50
-}
