@@ -18,15 +18,20 @@ DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 MIN_LEN = 5   # 训练序列最短长度，太短学不到顺序
 
 
-def load(data_path=DATA, min_len=MIN_LEN):
+def load(data_path=DATA, min_len=MIN_LEN, min_rating=4, max_users=None):
     """返回 (uid_list, train_list, valid_list, test_list, n_items)
 
     train_list[u] 是用户 u 的训练序列（list of item id，按时间升序）
     valid_list[u] / test_list[u] 是单个 item id（倒数第 2 / 最后一个）
+
+    min_rating=4 只保留 4 分以上（隐式反馈口径，和原项目一致）
+    min_rating=0 用全部评分（序列更长，更接近 SASRec 论文设定）
+    max_users   用户太多时随机采样（CPU 训练成本控制）
     """
     df = pd.read_csv(data_path, sep='::', header=None, engine='python',
                      names=['uid', 'mid', 'rating', 'ts'])
-    df = df[df['rating'] >= 4]              # 隐式反馈：4 分以上算一次"喜欢"
+    if min_rating > 0:
+        df = df[df['rating'] >= min_rating]  # 隐式反馈：4 分以上算一次"喜欢"
     df = df.sort_values(['uid', 'ts'])      # 按用户 + 时间排序
 
     items = sorted(df['mid'].unique())
@@ -43,10 +48,29 @@ def load(data_path=DATA, min_len=MIN_LEN):
         test.append(seq[-1])
         uid_list.append(uid)
 
+    if max_users is not None and len(uid_list) > max_users:
+        rng = np.random.default_rng(42)          # 固定种子，保证各脚本采样一致
+        keep = np.sort(rng.choice(len(uid_list), max_users, replace=False))
+        uid_list = [uid_list[i] for i in keep]
+        train = [train[i] for i in keep]
+        valid = [valid[i] for i in keep]
+        test = [test[i] for i in keep]
+
     print(f'可用用户 {len(uid_list)} / 原始 {df.uid.nunique()}，'
           f'物品数 {n_items - 1}，训练序列平均长度 '
           f'{np.mean([len(s) for s in train]):.1f}')
     return uid_list, train, valid, test, n_items
+
+
+def load_from_args(a):
+    """统一从 argparse 参数构造 load 调用，保证各脚本用完全相同的采样"""
+    kw = {'min_rating': a.min_rating}
+    data = getattr(a, 'data', '') or ''
+    if data:
+        kw['data_path'] = data
+    if getattr(a, 'max_users', 0):
+        kw['max_users'] = a.max_users
+    return load(**kw)
 
 
 def pad_seq(seq, max_len):

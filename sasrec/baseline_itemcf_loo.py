@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
 
-from dataset import load
+from dataset import load, load_from_args
 
 K, NDCG_K = 20, 10
 
@@ -36,9 +36,13 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--recent', type=int, default=0,
                    help='只用每个用户最近 N 个训练行为建矩阵（0=全用）')
+    p.add_argument('--min_rating', type=int, default=4,
+                   help='4=只用 4 分以上；0=用全部评分')
+    p.add_argument('--data', type=str, default='')
+    p.add_argument('--max_users', type=int, default=0)
     a = p.parse_args()
 
-    uids, train, valid, test, n_items = load()
+    uids, train, valid, test, n_items = load_from_args(a)
     n_users = len(train)
     train_use = [s[-a.recent:] if a.recent > 0 else s for s in train]
 

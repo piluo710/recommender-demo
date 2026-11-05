@@ -1,0 +1,210 @@
+{
+  "config": {
+    "max_len": 50,
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "dropout": 0.3,
+    "pos_scale": 1.0,
+    "res_scale": 0.1,
+    "batch": 128,
+    "epochs": 30,
+    "lr": 0.0005,
+    "neg": 10,
+    "neg_mode": "uniform",
+    "patience": 8,
+    "window": "random",
+    "min_rating": 0,
+    "data": "",
+    "max_users": 0,
+    "tag": "resscale01_L50"
+  },
+  "test_recall20": 0.0669,
+  "test_ndcg10": 0.0184,
+  "best_epoch": 28,
+  "n_users": 6040,
+  "n_items": 3706,
+  "params": 340544,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 12.7806,
+      "valid_recall20": 0.0061,
+      "valid_ndcg10": 0.0008
+    },
+    {
+      "epoch": 2,
+      "loss": 12.3522,
+      "valid_recall20": 0.007,
+      "valid_ndcg10": 0.0009
+    },
+    {
+      "epoch": 3,
+      "loss": 11.9456,
+      "valid_recall20": 0.0071,
+      "valid_ndcg10": 0.0009
+    },
+    {
+      "epoch": 4,
+      "loss": 11.514,
+      "valid_recall20": 0.0075,
+      "valid_ndcg10": 0.001
+    },
+    {
+      "epoch": 5,
+      "loss": 10.949,
+      "valid_recall20": 0.0101,
+      "valid_ndcg10": 0.0021
+    },
+    {
+      "epoch": 6,
+      "loss": 9.8192,
+      "valid_recall20": 0.0167,
+      "valid_ndcg10": 0.0046
+    },
+    {
+      "epoch": 7,
+      "loss": 7.8531,
+      "valid_recall20": 0.0214,
+      "valid_ndcg10": 0.0076
+    },
+    {
+      "epoch": 8,
+      "loss": 6.2714,
+      "valid_recall20": 0.0288,
+      "valid_ndcg10": 0.0087
+    },
+    {
+      "epoch": 9,
+      "loss": 5.1983,
+      "valid_recall20": 0.0323,
+      "valid_ndcg10": 0.0106
+    },
+    {
+      "epoch": 10,
+      "loss": 4.512,
+      "valid_recall20": 0.0386,
+      "valid_ndcg10": 0.0118
+    },
+    {
+      "epoch": 11,
+      "loss": 3.9953,
+      "valid_recall20": 0.0445,
+      "valid_ndcg10": 0.0132
+    },
+    {
+      "epoch": 12,
+      "loss": 3.632,
+      "valid_recall20": 0.0517,
+      "valid_ndcg10": 0.0148
+    },
+    {
+      "epoch": 13,
+      "loss": 3.3758,
+      "valid_recall20": 0.0546,
+      "valid_ndcg10": 0.016
+    },
+    {
+      "epoch": 14,
+      "loss": 3.18,
+      "valid_recall20": 0.0594,
+      "valid_ndcg10": 0.017
+    },
+    {
+      "epoch": 15,
+      "loss": 3.0302,
+      "valid_recall20": 0.0626,
+      "valid_ndcg10": 0.0178
+    },
+    {
+      "epoch": 16,
+      "loss": 2.9192,
+      "valid_recall20": 0.0649,
+      "valid_ndcg10": 0.0185
+    },
+    {
+      "epoch": 17,
+      "loss": 2.799,
+      "valid_recall20": 0.0662,
+      "valid_ndcg10": 0.0183
+    },
+    {
+      "epoch": 18,
+      "loss": 2.7289,
+      "valid_recall20": 0.0661,
+      "valid_ndcg10": 0.0185
+    },
+    {
+      "epoch": 19,
+      "loss": 2.6606,
+      "valid_recall20": 0.0657,
+      "valid_ndcg10": 0.019
+    },
+    {
+      "epoch": 20,
+      "loss": 2.5954,
+      "valid_recall20": 0.0666,
+      "valid_ndcg10": 0.0187
+    },
+    {
+      "epoch": 21,
+      "loss": 2.5456,
+      "valid_recall20": 0.0662,
+      "valid_ndcg10": 0.0189
+    },
+    {
+      "epoch": 22,
+      "loss": 2.4944,
+      "valid_recall20": 0.0669,
+      "valid_ndcg10": 0.0195
+    },
+    {
+      "epoch": 23,
+      "loss": 2.4487,
+      "valid_recall20": 0.0689,
+      "valid_ndcg10": 0.0193
+    },
+    {
+      "epoch": 24,
+      "loss": 2.4126,
+      "valid_recall20": 0.0682,
+      "valid_ndcg10": 0.0193
+    },
+    {
+      "epoch": 25,
+      "loss": 2.3734,
+      "valid_recall20": 0.0687,
+      "valid_ndcg10": 0.0194
+    },
+    {
+      "epoch": 26,
+      "loss": 2.3283,
+      "valid_recall20": 0.0692,
+      "valid_ndcg10": 0.0194
+    },
+    {
+      "epoch": 27,
+      "loss": 2.3047,
+      "valid_recall20": 0.0704,
+      "valid_ndcg10": 0.0193
+    },
+    {
+      "epoch": 28,
+      "loss": 2.2683,
+      "valid_recall20": 0.07,
+      "valid_ndcg10": 0.0197
+    },
+    {
+      "epoch": 29,
+      "loss": 2.2376,
+      "valid_recall20": 0.0702,
+      "valid_ndcg10": 0.0194
+    },
+    {
+      "epoch": 30,
+      "loss": 2.206,
+      "valid_recall20": 0.0695,
+      "valid_ndcg10": 0.0194
+    }
+  ]
+}

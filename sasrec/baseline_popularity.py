@@ -5,6 +5,7 @@
 如果纯流行度就能到 0.06-0.08，说明 SASRec 的 0.067 只是学到了热度。
 """
 
+import argparse
 import os
 import sys
 
@@ -12,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
 
-from dataset import load
+from dataset import load_from_args
 
 K, NDCG_K = 20, 10
 
@@ -26,7 +27,13 @@ def ndcg_at_k(rel, k):
 
 
 def main():
-    uids, train, valid, test, n_items = load()
+    p = argparse.ArgumentParser()
+    p.add_argument('--min_rating', type=int, default=4)
+    p.add_argument('--data', type=str, default='')
+    p.add_argument('--max_users', type=int, default=0)
+    a = p.parse_args()
+
+    uids, train, valid, test, n_items = load_from_args(a)
 
     # 全局流行度
     counts = np.zeros(n_items, dtype=np.int64)

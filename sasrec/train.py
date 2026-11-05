@@ -21,7 +21,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from dataset import load, pad_seq
+from dataset import load, pad_seq, load_from_args
 from model import SASRec
 
 SEED, K, NDCG_K = 42, 20, 10
@@ -40,6 +40,10 @@ def parse_args():
     p.add_argument('--blocks', type=int, default=2)
     p.add_argument('--heads', type=int, default=2)
     p.add_argument('--dropout', type=float, default=0.2)
+    p.add_argument('--pos_scale', type=float, default=1.0,
+                   help='位置编码权重；0=关闭（验证位置编码是否成了公共成分）')
+    p.add_argument('--res_scale', type=float, default=0.1,
+                   help='残差缩放系数，抑制 pre-LN 残差流爆炸')
     p.add_argument('--batch', type=int, default=128)
     p.add_argument('--epochs', type=int, default=30)
     p.add_argument('--lr', type=float, default=1e-3)
@@ -50,6 +54,12 @@ def parse_args():
     p.add_argument('--patience', type=int, default=4)
     p.add_argument('--window', type=str, default='random', choices=['random', 'fixed'],
                    help='训练序列窗口：random 每轮随机截取 / fixed 固定最近 max_len')
+    p.add_argument('--min_rating', type=int, default=4,
+                   help='4=只用 4 分以上（原项目口径）；0=用全部评分（序列更长）')
+    p.add_argument('--data', type=str, default='',
+                   help='ratings.dat 路径（默认 ../data/ml-1m/ratings.dat）')
+    p.add_argument('--max_users', type=int, default=0,
+                   help='随机采样用户数（0=全部）')
     p.add_argument('--tag', type=str, default='')
     return p.parse_args()
 
@@ -141,8 +151,9 @@ def train_one_epoch(model, opt, train_seqs, n_items, max_len, neg, batch, pop_t=
 def main():
     a = parse_args()
     setup()
-    uids, train, valid, test, n_items = load()
-    model = SASRec(n_items, a.max_len, a.d, a.blocks, a.heads, a.dropout)
+    uids, train, valid, test, n_items = load_from_args(a)
+    model = SASRec(n_items, a.max_len, a.d, a.blocks, a.heads, a.dropout,
+                   pos_scale=a.pos_scale, res_scale=a.res_scale)
     n_params = sum(p.numel() for p in model.parameters())
     print(f'配置：max_len={a.max_len} d={a.d} neg={a.neg} lr={a.lr} '
           f'epochs={a.epochs}｜参数 {n_params:,}')

@@ -1,0 +1,102 @@
+{
+  "config": {
+    "max_len": 50,
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "dropout": 0.3,
+    "pos_scale": 1.0,
+    "res_scale": 1.0,
+    "batch": 128,
+    "epochs": 20,
+    "lr": 0.0005,
+    "neg": 10,
+    "neg_mode": "uniform",
+    "patience": 5,
+    "window": "random",
+    "min_rating": 4,
+    "data": "D:\\code\\project\\recommender-demo\\data\\ml-10m\\ratings.dat",
+    "max_users": 20000,
+    "tag": "ml10m_L50"
+  },
+  "test_recall20": 0.0833,
+  "test_ndcg10": 0.0267,
+  "best_epoch": 7,
+  "n_users": 20000,
+  "n_items": 10258,
+  "params": 759872,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 8.6346,
+      "valid_recall20": 0.0083,
+      "valid_ndcg10": 0.0016
+    },
+    {
+      "epoch": 2,
+      "loss": 4.8228,
+      "valid_recall20": 0.0258,
+      "valid_ndcg10": 0.0039
+    },
+    {
+      "epoch": 3,
+      "loss": 2.9729,
+      "valid_recall20": 0.0633,
+      "valid_ndcg10": 0.0165
+    },
+    {
+      "epoch": 4,
+      "loss": 2.0794,
+      "valid_recall20": 0.079,
+      "valid_ndcg10": 0.0211
+    },
+    {
+      "epoch": 5,
+      "loss": 1.6679,
+      "valid_recall20": 0.0838,
+      "valid_ndcg10": 0.0224
+    },
+    {
+      "epoch": 6,
+      "loss": 1.4543,
+      "valid_recall20": 0.0876,
+      "valid_ndcg10": 0.0249
+    },
+    {
+      "epoch": 7,
+      "loss": 1.3301,
+      "valid_recall20": 0.0912,
+      "valid_ndcg10": 0.0273
+    },
+    {
+      "epoch": 8,
+      "loss": 1.2457,
+      "valid_recall20": 0.0896,
+      "valid_ndcg10": 0.0271
+    },
+    {
+      "epoch": 9,
+      "loss": 1.1866,
+      "valid_recall20": 0.0896,
+      "valid_ndcg10": 0.0273
+    },
+    {
+      "epoch": 10,
+      "loss": 1.1456,
+      "valid_recall20": 0.0892,
+      "valid_ndcg10": 0.0264
+    },
+    {
+      "epoch": 11,
+      "loss": 1.0995,
+      "valid_recall20": 0.0918,
+      "valid_ndcg10": 0.0266
+    },
+    {
+      "epoch": 12,
+      "loss": 1.0641,
+      "valid_recall20": 0.0906,
+      "valid_ndcg10": 0.0255
+    }
+  ]
+}
