@@ -1,0 +1,9 @@
+{
+  "recall20": 0.1871,
+  "ndcg10": 0.0607,
+  "n_users": 6040,
+  "top20_mismatch_users": 0,
+  "ckpt": "best.pt",
+  "tag": "normout_L50_long",
+  "min_rating": 0
+}

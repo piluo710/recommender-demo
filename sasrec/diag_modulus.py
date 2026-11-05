@@ -23,7 +23,7 @@ import argparse
 import numpy as np
 import torch
 
-from dataset import pad_seq
+from dataset import default_min_rating_from_meta, pad_seq
 from model import SASRec
 
 MAX_LEN = 50
@@ -32,7 +32,7 @@ MAX_LEN = 50
 @torch.no_grad()
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('--min_rating', type=int, default=4,
+    p.add_argument('--min_rating', type=int, default=default_min_rating_from_meta(),
                    help='必须与 best.pt 的训练口径一致，否则物品数对不上')
     p.add_argument('--data', type=str, default='')
     p.add_argument('--max_users', type=int, default=0)

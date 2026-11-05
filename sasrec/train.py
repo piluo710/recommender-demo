@@ -187,7 +187,8 @@ def main():
         with open(os.path.join(HERE, 'best_meta.json'), 'w', encoding='utf-8') as f:
             json.dump({'norm_out': bool(a.norm_out), 'max_len': a.max_len, 'd': a.d,
                        'blocks': a.blocks, 'heads': a.heads, 'pos_scale': a.pos_scale,
-                       'res_scale': a.res_scale, 'min_rating': a.min_rating,
+                       'res_scale': a.res_scale, 'logit_scale': m.logit_scale,
+                       'min_rating': a.min_rating,
                        'tag': a.tag}, f, ensure_ascii=False, indent=2)
 
     for ep in range(1, a.epochs + 1):

@@ -23,7 +23,7 @@ import numpy as np
 import torch
 
 from dataset import pad_seq, load
-from model import SASRec
+from model import build_from_meta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 K = 20
@@ -52,20 +52,21 @@ def main():
         kw['max_users'] = a.max_users
     uids, train, valid, test, n_items = load(**kw)
 
-    model = SASRec(n_items, a.max_len, a.d, a.blocks, a.heads)
-    model.load_state_dict(torch.load(os.path.join(HERE, 'best.pt'),
-                                     map_location='cpu', weights_only=True))
-    # 权重必须按照训练时的输出层模式推理。state_dict 不含 norm_out，
-    # 所以从 best_meta.json 还原；缺失时明确告警，不默认猜一个。
+    # 权重必须按照训练时的配置推理。state_dict 不含 norm_out / logit_scale /
+    # 结构参数，所以一律从 best_meta.json 还原；缺失时明确告警，不默认猜。
     meta_path = os.path.join(HERE, 'best_meta.json')
+    meta = {}
     if os.path.exists(meta_path):
         with open(meta_path, encoding='utf-8') as f:
             meta = json.load(f)
-        model.norm_out = bool(meta.get('norm_out', False))
-        print(f'推理模式：norm_out={model.norm_out}（来自 best_meta.json，tag={meta.get("tag")}）')
+        print(f'推理配置：norm_out={meta.get("norm_out")} '
+              f'logit_scale={meta.get("logit_scale", 20.0)} '
+              f'（来自 best_meta.json，tag={meta.get("tag")}）')
     else:
-        print('[警告] 缺少 best_meta.json，按点积模式推理；'
+        print('[警告] 缺少 best_meta.json，按点积模式 + 命令行默认结构推理；'
               '若权重来自余弦输出层版本，以下数字全部失真')
+    # 结构参数取自 meta 而不是命令行默认值：默认值和训练配置不一致同样会静默出错
+    model = build_from_meta(n_items, meta, os.path.join(HERE, 'best.pt'))
     model.eval()
 
     # ---- 全局最热 top20（训练集内出现次数）

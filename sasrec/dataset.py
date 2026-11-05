@@ -8,6 +8,7 @@
 - 为保持对比公平，同口径下重跑 ItemCF 基线（baseline_itemcf_loo.py）
 """
 
+import json
 import os
 
 import numpy as np
@@ -16,6 +17,22 @@ import pandas as pd
 DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                     '..', 'data', 'ml-1m', 'ratings.dat')
 MIN_LEN = 5   # 训练序列最短长度，太短学不到顺序
+
+
+def default_min_rating_from_meta(here=None):
+    """返回 best.pt 的训练口径（best_meta.json 里的 min_rating）。
+
+    所有加载 best.pt 的诊断脚本都应以此作默认口径：
+    数据物品数由 min_rating 决定，和权重行数不一致时
+    load_state_dict 会 size mismatch 直接崩，而不是给出可用的结果。
+    """
+    try:
+        if here is None:
+            here = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(here, 'best_meta.json'), encoding='utf-8') as f:
+            return json.load(f).get('min_rating', 4)
+    except Exception:
+        return 4
 
 
 def load(data_path=DATA, min_len=MIN_LEN, min_rating=4, max_users=None):

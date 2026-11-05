@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import torch
 
-from dataset import load_from_args, pad_seq
+from dataset import default_min_rating_from_meta, load_from_args, pad_seq
 from model import SASRec
 
 MAX_LEN = 50
@@ -32,7 +32,8 @@ def cos_of(reps):
 @torch.no_grad()
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('--min_rating', type=int, default=4)
+    # 默认跟 best.pt 的训练口径走，否则物品数不匹配，load_state_dict 直接崩
+    p.add_argument('--min_rating', type=int, default=default_min_rating())
     p.add_argument('--data', type=str, default='')
     p.add_argument('--max_users', type=int, default=0)
     a = p.parse_args()

@@ -44,13 +44,16 @@ class Block(nn.Module):
                            key_padding_mask=key_padding_mask, need_weights=False)
         # padding 位置的 query 在可见范围被全屏蔽时 softmax 分母为 0 -> NaN，先清零
         out = out.masked_fill(key_padding_mask.unsqueeze(-1), 0.0)
-        # 残差基于归一化后的 h（官方实现：seqs = Q + mha_outputs）。
-        # 若写成 x = x + out，残差流会逐层累加、模长从 62 涨到 1208，
-        # 用户自己的物品信号被淹没 -> 表示坍缩成全局偏置。
+        # 残差基准取归一化后的 h —— 这是我们的自定义改造，**偏离标准 pre-LN**。
+        # 标准 pre-LN 是 x = x + attn(ln(x))（残差基于原始 x）。
+        # 我们这样写是为了把残差流模长锁在 LayerNorm 输出量级（约 sqrt(d)=8）。
+        # 若不锁，残差流逐层累加、模长从 62 涨到 1208，用户自己的物品信号被淹没
+        # -> 表示坍缩成全局偏置。改动有实测依据，但不声称与任何官方实现一致。
         x = h + self.drop(out) * self.res_scale
         h = self.ln2(x)
         x = x + self.drop(self.ffn(h)) * self.res_scale
-        # 每层结束整体清零 padding 位置（官方做法），避免零向量带着位置信息扩散
+        # 每层结束整体清零 padding 位置，避免零向量带着位置信号扩散到下一层
+        x = x.masked_fill(key_padding_mask.unsqueeze(-1), 0.0)
         x = x.masked_fill(key_padding_mask.unsqueeze(-1), 0.0)
         return x
 
@@ -121,3 +124,27 @@ class SASRec(nn.Module):
             return (x @ w.T) * self.logit_scale
         # 权重共享：直接和 item embedding 转置做点积
         return x @ self.item_emb.weight.T
+
+
+def build_from_meta(n_items, meta, ckpt_path=None):
+    """按 best_meta.json 里记录的配置重建模型（并可顺带加载权重）。
+
+    为什么所有脚本都必须走这个入口：
+    norm_out / logit_scale / pos_scale / res_scale / max_len / d / blocks / heads
+    都不在 state_dict 里。只要构造参数和训练时不一致，推理就会**静默出错** ——
+    不抛异常、不报警，只是分数全错。之前 diag_what 用命令行默认值重建模型，
+    就是这类隐患的定时炸弹。
+    """
+    m = SASRec(n_items,
+               max_len=int(meta.get('max_len', 50)),
+               d=int(meta.get('d', 64)),
+               n_blocks=int(meta.get('blocks', 2)),
+               n_heads=int(meta.get('heads', 2)),
+               pos_scale=float(meta.get('pos_scale', 1.0)),
+               res_scale=float(meta.get('res_scale', 1.0)))
+    m.norm_out = bool(meta.get('norm_out', False))
+    m.logit_scale = float(meta.get('logit_scale', 20.0))
+    if ckpt_path is not None:
+        m.load_state_dict(torch.load(ckpt_path, map_location='cpu',
+                                     weights_only=True))
+    return m

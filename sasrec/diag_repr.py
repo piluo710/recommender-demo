@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import torch
 
-from dataset import load_from_args
+from dataset import default_min_rating_from_meta, load_from_args
 from model import SASRec
 
 MAX_LEN = 50
@@ -25,7 +25,7 @@ MAX_LEN = 50
 @torch.no_grad()
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('--min_rating', type=int, default=4)
+    p.add_argument('--min_rating', type=int, default=default_min_rating_from_meta())
     p.add_argument('--data', type=str, default='')
     p.add_argument('--max_users', type=int, default=0)
     a = p.parse_args()
