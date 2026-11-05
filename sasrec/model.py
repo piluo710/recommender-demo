@@ -70,10 +70,20 @@ class SASRec(nn.Module):
         self.last_ln = nn.LayerNorm(d)
         self.max_len = max_len
         self.logit_scale = 20.0   # 余弦相似度模式下的温度（可调）
+        # 输出层模式必须是模型的一部分，不能靠外部动态注入：
+        # 否则任何人 load 权重后都会默认走点积分支，推理结果静默错误、且不报错。
+        # 训练脚本会把它和 max_len/d 一起写进 best_meta.json，加载方据此还原。
+        self.norm_out = False
 
     def encode(self, seq):
         """返回序列表示 [B, L, d]（last_ln 之后），便于诊断/取特征"""
         B, L = seq.shape
+        # pos_emb 只有 max_len 行：L 超过 max_len 会静默越界或报 index 错，
+        # 这里提前抛出，避免"推理长度和训练长度不一致"这类问题再次悄悄发生
+        if L > self.pos_emb.num_embeddings:
+            raise ValueError(
+                f'输入长度 {L} 超过位置编码容量 {self.pos_emb.num_embeddings}；'
+                f'训练与推理必须使用同一个 max_len')
         pos = torch.arange(L, device=seq.device).unsqueeze(0).expand(B, L)
         # 论文标准做法：item embedding 乘 sqrt(d) 后再叠加位置编码，
         # 否则位置信号会淹没物品信号，模型只学到"位置模式"而不是物品偏好

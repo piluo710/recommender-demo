@@ -12,6 +12,7 @@
 """
 
 import argparse
+import json
 import os
 import sys
 from collections import Counter
@@ -54,6 +55,17 @@ def main():
     model = SASRec(n_items, a.max_len, a.d, a.blocks, a.heads)
     model.load_state_dict(torch.load(os.path.join(HERE, 'best.pt'),
                                      map_location='cpu', weights_only=True))
+    # 权重必须按照训练时的输出层模式推理。state_dict 不含 norm_out，
+    # 所以从 best_meta.json 还原；缺失时明确告警，不默认猜一个。
+    meta_path = os.path.join(HERE, 'best_meta.json')
+    if os.path.exists(meta_path):
+        with open(meta_path, encoding='utf-8') as f:
+            meta = json.load(f)
+        model.norm_out = bool(meta.get('norm_out', False))
+        print(f'推理模式：norm_out={model.norm_out}（来自 best_meta.json，tag={meta.get("tag")}）')
+    else:
+        print('[警告] 缺少 best_meta.json，按点积模式推理；'
+              '若权重来自余弦输出层版本，以下数字全部失真')
     model.eval()
 
     # ---- 全局最热 top20（训练集内出现次数）
@@ -71,7 +83,7 @@ def main():
     for u in range(min(a.n_users, len(train))):
         hist = train[u] + [valid[u]]
         seqs = torch.tensor([pad_seq(hist, a.max_len)])
-        logits = model(seqs)[:, -1, :].clone()
+        logits = model(seqs, model.norm_out)[:, -1, :].clone()
         logits[0, 0] = -1e9
         idx = torch.tensor(sorted(set(hist)), dtype=torch.long)
         logits[0, idx] = -1e9

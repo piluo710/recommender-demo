@@ -6,6 +6,7 @@
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -45,7 +46,8 @@ def main():
 
     hits, ndcg_sum, n = 0, 0.0, 0
     for u in range(len(train)):
-        seen = set(train[u])
+        # 排除集与 SASRec / ItemCF 保持一致：训练集 + 验证集
+        seen = set(train[u]) | {valid[u]}
         cand = [it for it in pop_order if it not in seen][:K]
         hits += int(test[u] in cand)
         rel = np.array([1 if j == test[u] else 0 for j in cand])
@@ -54,6 +56,16 @@ def main():
 
     print('===== 纯流行度基线（leave-one-out）=====')
     print(f'Recall@20={hits / n:.4f}  NDCG@10={ndcg_sum / n:.4f}  （用户 {n}）')
+
+    ds = os.path.basename(os.path.dirname(a.data)) if a.data else 'ml-1m'
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                       f'baseline_popularity_{ds}_r{a.min_rating}.json')
+    with open(out, 'w', encoding='utf-8') as f:
+        json.dump({'test_recall20': round(hits / n, 4),
+                   'test_ndcg10': round(ndcg_sum / n, 4),
+                   'n_users': n, 'dataset': ds, 'min_rating': a.min_rating},
+                  f, ensure_ascii=False, indent=2)
+    print(f'结果已写入 {out}')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,7 @@
+{
+  "test_recall20": 0.0726,
+  "test_ndcg10": 0.0192,
+  "n_users": 6016,
+  "dataset": "ml-1m",
+  "min_rating": 4
+}

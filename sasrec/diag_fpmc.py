@@ -105,7 +105,9 @@ def main():
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
     gen = torch.Generator().manual_seed(42)
 
-    valid_pairs = [(train[u] + [valid[u]], test[u]) for u in range(len(train))]
+    # valid 用 train -> 倒数第2个，test 用 train+valid -> 最后一个。
+    # 早停只能看 valid；之前两个都写成 test，等于拿测试集选 epoch，指标会虚高。
+    valid_pairs = [(train[u], valid[u]) for u in range(len(train))]
     test_pairs = [(train[u] + [valid[u]], test[u]) for u in range(len(train))]
 
     best, best_ep, bad = -1, 0, 0

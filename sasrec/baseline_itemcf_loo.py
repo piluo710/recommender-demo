@@ -64,7 +64,9 @@ def main():
     for u in range(n_users):
         row = scores[u].copy()
         row[0] = -np.inf
-        for it in train[u]:          # 排除全部训练交互（不只最近 N 个）
+        # 排除集必须和 SASRec 完全一致：训练集 + 验证集。
+        # 只排 train 会让 valid item 占掉一个 top20 名额，两边口径就不对等了。
+        for it in set(train[u]) | {valid[u]}:
             row[it] = -np.inf
         top = np.argpartition(row, -K)[-K:]
         top = top[np.argsort(row[top])[::-1]]
@@ -78,12 +80,15 @@ def main():
     print(f'Recall@20={hits / n:.4f}  NDCG@10={ndcg_sum / n:.4f}  （用户 {n}）')
 
     tag = f'_recent{a.recent}' if a.recent > 0 else ''
+    # 文件名同时带数据集和 min_rating，否则同一数据集的两种口径会互相覆盖
+    ds = os.path.basename(os.path.dirname(a.data)) if a.data else 'ml-1m'
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                       f'baseline_itemcf{tag}.json')
+                       f'baseline_itemcf_{ds}_r{a.min_rating}{tag}.json')
     with open(out, 'w', encoding='utf-8') as f:
         json.dump({'test_recall20': round(hits / n, 4),
                    'test_ndcg10': round(ndcg_sum / n, 4),
-                   'n_users': n, 'recent': a.recent}, f, ensure_ascii=False, indent=2)
+                   'n_users': n, 'recent': a.recent, 'dataset': ds,
+                   'min_rating': a.min_rating}, f, ensure_ascii=False, indent=2)
     print(f'结果已写入 {out}')
 
 

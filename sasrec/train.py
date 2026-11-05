@@ -176,6 +176,20 @@ def main():
     best, best_ep, bad = -1.0, -1, 0
     history = []
     t0 = time.time()
+
+    def save_ckpt(m):
+        """权重 + 推理所需元信息一起落盘。
+
+        state_dict 里不含 norm_out，若只存权重，任何脚本加载后都会默认走点积分支，
+        拿到的是"看起来合理、其实错误"的分数。所以把推理配置单独写成 best_meta.json。
+        """
+        torch.save(m.state_dict(), os.path.join(HERE, 'best.pt'))
+        with open(os.path.join(HERE, 'best_meta.json'), 'w', encoding='utf-8') as f:
+            json.dump({'norm_out': bool(a.norm_out), 'max_len': a.max_len, 'd': a.d,
+                       'blocks': a.blocks, 'heads': a.heads, 'pos_scale': a.pos_scale,
+                       'res_scale': a.res_scale, 'min_rating': a.min_rating,
+                       'tag': a.tag}, f, ensure_ascii=False, indent=2)
+
     for ep in range(1, a.epochs + 1):
         loss = train_one_epoch(model, opt, train, n_items, a.max_len, a.neg,
                                a.batch, pop_t, a.window == 'random')
@@ -187,7 +201,7 @@ def main():
               f'NDCG@10={vn:.4f} ({time.time() - t0:.0f}s)')
         if vn > best:
             best, best_ep, bad = vn, ep, 0
-            torch.save(model.state_dict(), os.path.join(HERE, 'best.pt'))
+            save_ckpt(model)
         else:
             bad += 1
             if bad >= a.patience:
