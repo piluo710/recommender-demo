@@ -1,0 +1,5 @@
+{
+  "test_recall20": 0.1017,
+  "test_ndcg10": 0.0301,
+  "n_users": 6016
+}

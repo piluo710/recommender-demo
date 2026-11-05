@@ -1,0 +1,89 @@
+{
+  "config": {
+    "max_len": 100,
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "dropout": 0.2,
+    "batch": 128,
+    "epochs": 25,
+    "lr": 0.001,
+    "neg": 10,
+    "patience": 3,
+    "tag": ""
+  },
+  "test_recall20": 0.0665,
+  "test_ndcg10": 0.0179,
+  "best_epoch": 8,
+  "n_users": 6016,
+  "n_items": 3533,
+  "params": 332672,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 10.5072,
+      "valid_recall20": 0.0066,
+      "valid_ndcg10": 0.0011
+    },
+    {
+      "epoch": 2,
+      "loss": 6.6966,
+      "valid_recall20": 0.0118,
+      "valid_ndcg10": 0.0014
+    },
+    {
+      "epoch": 3,
+      "loss": 4.6587,
+      "valid_recall20": 0.0241,
+      "valid_ndcg10": 0.0031
+    },
+    {
+      "epoch": 4,
+      "loss": 3.5401,
+      "valid_recall20": 0.048,
+      "valid_ndcg10": 0.006
+    },
+    {
+      "epoch": 5,
+      "loss": 2.9496,
+      "valid_recall20": 0.0657,
+      "valid_ndcg10": 0.015
+    },
+    {
+      "epoch": 6,
+      "loss": 2.6456,
+      "valid_recall20": 0.0766,
+      "valid_ndcg10": 0.0203
+    },
+    {
+      "epoch": 7,
+      "loss": 2.465,
+      "valid_recall20": 0.0795,
+      "valid_ndcg10": 0.0208
+    },
+    {
+      "epoch": 8,
+      "loss": 2.353,
+      "valid_recall20": 0.0791,
+      "valid_ndcg10": 0.0212
+    },
+    {
+      "epoch": 9,
+      "loss": 2.2822,
+      "valid_recall20": 0.077,
+      "valid_ndcg10": 0.0203
+    },
+    {
+      "epoch": 10,
+      "loss": 2.2251,
+      "valid_recall20": 0.079,
+      "valid_ndcg10": 0.0208
+    },
+    {
+      "epoch": 11,
+      "loss": 2.1732,
+      "valid_recall20": 0.077,
+      "valid_ndcg10": 0.0198
+    }
+  ]
+}

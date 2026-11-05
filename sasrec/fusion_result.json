@@ -1,0 +1,45 @@
+{
+  "sweep": [
+    {
+      "w_sasrec": 0.0,
+      "recall20": 0.1348,
+      "ndcg10": 0.0394
+    },
+    {
+      "w_sasrec": 0.1,
+      "recall20": 0.1333,
+      "ndcg10": 0.0393
+    },
+    {
+      "w_sasrec": 0.2,
+      "recall20": 0.1325,
+      "ndcg10": 0.0395
+    },
+    {
+      "w_sasrec": 0.3,
+      "recall20": 0.1318,
+      "ndcg10": 0.039
+    },
+    {
+      "w_sasrec": 0.4,
+      "recall20": 0.1297,
+      "ndcg10": 0.0386
+    },
+    {
+      "w_sasrec": 0.5,
+      "recall20": 0.1263,
+      "ndcg10": 0.0378
+    },
+    {
+      "w_sasrec": 0.7,
+      "recall20": 0.1117,
+      "ndcg10": 0.0335
+    },
+    {
+      "w_sasrec": 1.0,
+      "recall20": 0.0695,
+      "ndcg10": 0.0184
+    }
+  ],
+  "note": "ItemCF只用最近50个行为"
+}

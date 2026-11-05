@@ -1,0 +1,130 @@
+{
+  "test_recall20": 0.0672,
+  "test_ndcg10": 0.0185,
+  "best_epoch": 16,
+  "n_users": 6016,
+  "n_items": 3533,
+  "params": 329472,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 5.6069,
+      "valid_recall20": 0.0076,
+      "valid_ndcg10": 0.001
+    },
+    {
+      "epoch": 2,
+      "loss": 3.9186,
+      "valid_recall20": 0.0121,
+      "valid_ndcg10": 0.0017
+    },
+    {
+      "epoch": 3,
+      "loss": 2.8433,
+      "valid_recall20": 0.013,
+      "valid_ndcg10": 0.0027
+    },
+    {
+      "epoch": 4,
+      "loss": 2.1969,
+      "valid_recall20": 0.0131,
+      "valid_ndcg10": 0.0029
+    },
+    {
+      "epoch": 5,
+      "loss": 1.8184,
+      "valid_recall20": 0.0148,
+      "valid_ndcg10": 0.0033
+    },
+    {
+      "epoch": 6,
+      "loss": 1.5908,
+      "valid_recall20": 0.0148,
+      "valid_ndcg10": 0.0038
+    },
+    {
+      "epoch": 7,
+      "loss": 1.4479,
+      "valid_recall20": 0.0173,
+      "valid_ndcg10": 0.0043
+    },
+    {
+      "epoch": 8,
+      "loss": 1.367,
+      "valid_recall20": 0.0426,
+      "valid_ndcg10": 0.0051
+    },
+    {
+      "epoch": 9,
+      "loss": 1.3079,
+      "valid_recall20": 0.0602,
+      "valid_ndcg10": 0.01
+    },
+    {
+      "epoch": 10,
+      "loss": 1.2716,
+      "valid_recall20": 0.0701,
+      "valid_ndcg10": 0.0171
+    },
+    {
+      "epoch": 11,
+      "loss": 1.2413,
+      "valid_recall20": 0.0788,
+      "valid_ndcg10": 0.0204
+    },
+    {
+      "epoch": 12,
+      "loss": 1.2246,
+      "valid_recall20": 0.0718,
+      "valid_ndcg10": 0.0204
+    },
+    {
+      "epoch": 13,
+      "loss": 1.2053,
+      "valid_recall20": 0.079,
+      "valid_ndcg10": 0.0217
+    },
+    {
+      "epoch": 14,
+      "loss": 1.1859,
+      "valid_recall20": 0.0773,
+      "valid_ndcg10": 0.0219
+    },
+    {
+      "epoch": 15,
+      "loss": 1.17,
+      "valid_recall20": 0.0763,
+      "valid_ndcg10": 0.0222
+    },
+    {
+      "epoch": 16,
+      "loss": 1.1519,
+      "valid_recall20": 0.0776,
+      "valid_ndcg10": 0.0239
+    },
+    {
+      "epoch": 17,
+      "loss": 1.1438,
+      "valid_recall20": 0.0778,
+      "valid_ndcg10": 0.0215
+    },
+    {
+      "epoch": 18,
+      "loss": 1.1264,
+      "valid_recall20": 0.0796,
+      "valid_ndcg10": 0.0223
+    },
+    {
+      "epoch": 19,
+      "loss": 1.1098,
+      "valid_recall20": 0.0736,
+      "valid_ndcg10": 0.0223
+    },
+    {
+      "epoch": 20,
+      "loss": 1.0947,
+      "valid_recall20": 0.0756,
+      "valid_ndcg10": 0.0215
+    }
+  ]
+}

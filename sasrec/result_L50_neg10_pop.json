@@ -1,0 +1,72 @@
+{
+  "config": {
+    "max_len": 50,
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "dropout": 0.2,
+    "batch": 128,
+    "epochs": 30,
+    "lr": 0.001,
+    "neg": 10,
+    "neg_mode": "pop",
+    "patience": 5,
+    "tag": "L50_neg10_pop"
+  },
+  "test_recall20": 0.0007,
+  "test_ndcg10": 0.0002,
+  "best_epoch": 3,
+  "n_users": 6016,
+  "n_items": 3533,
+  "params": 329472,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 11.0829,
+      "valid_recall20": 0.0015,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 2,
+      "loss": 7.2071,
+      "valid_recall20": 0.0005,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 3,
+      "loss": 5.4143,
+      "valid_recall20": 0.0003,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 4,
+      "loss": 4.4531,
+      "valid_recall20": 0.0005,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 5,
+      "loss": 3.9377,
+      "valid_recall20": 0.0005,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 6,
+      "loss": 3.663,
+      "valid_recall20": 0.0007,
+      "valid_ndcg10": 0.0002
+    },
+    {
+      "epoch": 7,
+      "loss": 3.4931,
+      "valid_recall20": 0.0008,
+      "valid_ndcg10": 0.0001
+    },
+    {
+      "epoch": 8,
+      "loss": 3.372,
+      "valid_recall20": 0.0007,
+      "valid_ndcg10": 0.0001
+    }
+  ]
+}
