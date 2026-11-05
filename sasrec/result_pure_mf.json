@@ -1,0 +1,7 @@
+{
+  "recall": 0.006291390728476821,
+  "ndcg": 0.002204328945541309,
+  "best_epoch": 1,
+  "min_rating": 0,
+  "model": "PureMF(no attention)"
+}

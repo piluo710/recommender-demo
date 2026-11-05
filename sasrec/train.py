@@ -42,15 +42,17 @@ def parse_args():
     p.add_argument('--dropout', type=float, default=0.2)
     p.add_argument('--pos_scale', type=float, default=1.0,
                    help='位置编码权重；0=关闭（验证位置编码是否成了公共成分）')
-    p.add_argument('--res_scale', type=float, default=0.1,
-                   help='残差缩放系数，抑制 pre-LN 残差流爆炸')
+    p.add_argument('--res_scale', type=float, default=1.0,
+                   help='残差缩放系数；1.0=标准（与官方实现一致），小于 1 会削弱每层贡献')
+    p.add_argument('--norm_out', action='store_true',
+                   help='输出层改用余弦相似度 + 固定温度；原始点积尺度 40+，softmax 接近 one-hot，梯度只作用在最高频物品上')
     p.add_argument('--batch', type=int, default=128)
     p.add_argument('--epochs', type=int, default=30)
     p.add_argument('--lr', type=float, default=1e-3)
     p.add_argument('--neg', type=int, default=10, help='每个正样本的随机负样本数')
-    p.add_argument('--neg_mode', type=str, default='pop',
+    p.add_argument('--neg_mode', type=str, default='uniform',
                    choices=['uniform', 'pop'],
-                   help='负采样分布：uniform 均匀 / pop 按流行度加权')
+                   help='负采样分布：uniform 均匀（默认，稳定）/ pop 按流行度加权（实测会崩，仅用于复现实验）')
     p.add_argument('--patience', type=int, default=4)
     p.add_argument('--window', type=str, default='random', choices=['random', 'fixed'],
                    help='训练序列窗口：random 每轮随机截取 / fixed 固定最近 max_len')
@@ -82,7 +84,7 @@ def evaluate(model, user_inputs, targets, exclude_sets, n_items, max_len, batch=
         end = min(start + batch, len(user_inputs))
         seqs = torch.tensor([pad_seq(user_inputs[u], max_len)
                              for u in range(start, end)])
-        logits = model(seqs)[:, -1, :]
+        logits = model(seqs, model.norm_out)[:, -1, :]
         scores = torch.nan_to_num(logits.clone(), nan=-1e9)
         scores[:, 0] = -1e9
         for i, u in enumerate(range(start, end)):
@@ -129,7 +131,7 @@ def train_one_epoch(model, opt, train_seqs, n_items, max_len, neg, batch, pop_t=
         else:
             seqs = torch.tensor([pad_seq(train_seqs[u], max_len + 1) for u in idx])
         x, y = seqs[:, :-1], seqs[:, 1:]     # 长度 max_len，位置编码全覆盖
-        logits = model(x)                    # [B, L, V]
+        logits = model(x, model.norm_out)    # [B, L, V]
         pos = logits.gather(2, y.unsqueeze(2))                                   # [B, L, 1]
         if pop_t is not None:
             neg_ids = torch.multinomial(pop_t, y.numel() * neg,
@@ -154,6 +156,7 @@ def main():
     uids, train, valid, test, n_items = load_from_args(a)
     model = SASRec(n_items, a.max_len, a.d, a.blocks, a.heads, a.dropout,
                    pos_scale=a.pos_scale, res_scale=a.res_scale)
+    model.norm_out = a.norm_out
     n_params = sum(p.numel() for p in model.parameters())
     print(f'配置：max_len={a.max_len} d={a.d} neg={a.neg} lr={a.lr} '
           f'epochs={a.epochs}｜参数 {n_params:,}')

@@ -1,0 +1,211 @@
+{
+  "config": {
+    "max_len": 50,
+    "d": 64,
+    "blocks": 2,
+    "heads": 2,
+    "dropout": 0.2,
+    "pos_scale": 1.0,
+    "res_scale": 1.0,
+    "norm_out": true,
+    "batch": 128,
+    "epochs": 30,
+    "lr": 0.001,
+    "neg": 10,
+    "neg_mode": "uniform",
+    "patience": 6,
+    "window": "random",
+    "min_rating": 0,
+    "data": "",
+    "max_users": 0,
+    "tag": "normout_L50"
+  },
+  "test_recall20": 0.0939,
+  "test_ndcg10": 0.0269,
+  "best_epoch": 29,
+  "n_users": 6040,
+  "n_items": 3706,
+  "params": 340544,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 3.8636,
+      "valid_recall20": 0.0149,
+      "valid_ndcg10": 0.0037
+    },
+    {
+      "epoch": 2,
+      "loss": 3.0406,
+      "valid_recall20": 0.02,
+      "valid_ndcg10": 0.0051
+    },
+    {
+      "epoch": 3,
+      "loss": 2.5216,
+      "valid_recall20": 0.0354,
+      "valid_ndcg10": 0.0086
+    },
+    {
+      "epoch": 4,
+      "loss": 2.1791,
+      "valid_recall20": 0.0503,
+      "valid_ndcg10": 0.0159
+    },
+    {
+      "epoch": 5,
+      "loss": 1.9729,
+      "valid_recall20": 0.0652,
+      "valid_ndcg10": 0.0188
+    },
+    {
+      "epoch": 6,
+      "loss": 1.8502,
+      "valid_recall20": 0.0705,
+      "valid_ndcg10": 0.0198
+    },
+    {
+      "epoch": 7,
+      "loss": 1.7725,
+      "valid_recall20": 0.0715,
+      "valid_ndcg10": 0.02
+    },
+    {
+      "epoch": 8,
+      "loss": 1.7414,
+      "valid_recall20": 0.0717,
+      "valid_ndcg10": 0.0207
+    },
+    {
+      "epoch": 9,
+      "loss": 1.7099,
+      "valid_recall20": 0.0685,
+      "valid_ndcg10": 0.0214
+    },
+    {
+      "epoch": 10,
+      "loss": 1.7019,
+      "valid_recall20": 0.071,
+      "valid_ndcg10": 0.0197
+    },
+    {
+      "epoch": 11,
+      "loss": 1.6872,
+      "valid_recall20": 0.0728,
+      "valid_ndcg10": 0.0203
+    },
+    {
+      "epoch": 12,
+      "loss": 1.6764,
+      "valid_recall20": 0.0717,
+      "valid_ndcg10": 0.0221
+    },
+    {
+      "epoch": 13,
+      "loss": 1.6734,
+      "valid_recall20": 0.0733,
+      "valid_ndcg10": 0.0221
+    },
+    {
+      "epoch": 14,
+      "loss": 1.6746,
+      "valid_recall20": 0.0724,
+      "valid_ndcg10": 0.0222
+    },
+    {
+      "epoch": 15,
+      "loss": 1.6701,
+      "valid_recall20": 0.0765,
+      "valid_ndcg10": 0.0219
+    },
+    {
+      "epoch": 16,
+      "loss": 1.6661,
+      "valid_recall20": 0.0747,
+      "valid_ndcg10": 0.0211
+    },
+    {
+      "epoch": 17,
+      "loss": 1.6525,
+      "valid_recall20": 0.0742,
+      "valid_ndcg10": 0.0221
+    },
+    {
+      "epoch": 18,
+      "loss": 1.6524,
+      "valid_recall20": 0.076,
+      "valid_ndcg10": 0.0227
+    },
+    {
+      "epoch": 19,
+      "loss": 1.6483,
+      "valid_recall20": 0.0778,
+      "valid_ndcg10": 0.0217
+    },
+    {
+      "epoch": 20,
+      "loss": 1.6427,
+      "valid_recall20": 0.0775,
+      "valid_ndcg10": 0.0229
+    },
+    {
+      "epoch": 21,
+      "loss": 1.6392,
+      "valid_recall20": 0.078,
+      "valid_ndcg10": 0.0232
+    },
+    {
+      "epoch": 22,
+      "loss": 1.6286,
+      "valid_recall20": 0.0803,
+      "valid_ndcg10": 0.0244
+    },
+    {
+      "epoch": 23,
+      "loss": 1.6266,
+      "valid_recall20": 0.0831,
+      "valid_ndcg10": 0.023
+    },
+    {
+      "epoch": 24,
+      "loss": 1.6233,
+      "valid_recall20": 0.0846,
+      "valid_ndcg10": 0.0228
+    },
+    {
+      "epoch": 25,
+      "loss": 1.6156,
+      "valid_recall20": 0.0863,
+      "valid_ndcg10": 0.0252
+    },
+    {
+      "epoch": 26,
+      "loss": 1.6021,
+      "valid_recall20": 0.0863,
+      "valid_ndcg10": 0.0268
+    },
+    {
+      "epoch": 27,
+      "loss": 1.6027,
+      "valid_recall20": 0.0892,
+      "valid_ndcg10": 0.0274
+    },
+    {
+      "epoch": 28,
+      "loss": 1.5868,
+      "valid_recall20": 0.0889,
+      "valid_ndcg10": 0.028
+    },
+    {
+      "epoch": 29,
+      "loss": 1.5697,
+      "valid_recall20": 0.0919,
+      "valid_ndcg10": 0.0287
+    },
+    {
+      "epoch": 30,
+      "loss": 1.5616,
+      "valid_recall20": 0.0949,
+      "valid_ndcg10": 0.0286
+    }
+  ]
+}

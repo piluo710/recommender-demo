@@ -14,6 +14,7 @@
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class Block(nn.Module):
@@ -26,7 +27,7 @@ class Block(nn.Module):
     乘一个小系数把残差流锁住（GPT-2 的 residual scaling 同理）。
     """
 
-    def __init__(self, d, n_heads, dropout, res_scale=0.1):
+    def __init__(self, d, n_heads, dropout, res_scale=1.0):
         super().__init__()
         self.res_scale = res_scale
         self.ln1 = nn.LayerNorm(d)
@@ -56,7 +57,7 @@ class Block(nn.Module):
 
 class SASRec(nn.Module):
     def __init__(self, n_items, max_len=50, d=64, n_blocks=2, n_heads=2, dropout=0.2,
-                 pos_scale=1.0, res_scale=0.1):
+                 pos_scale=1.0, res_scale=1.0):
         super().__init__()
         self.d = d
         self.pos_scale = pos_scale   # 位置编码权重（0 表示完全关闭）
@@ -68,6 +69,7 @@ class SASRec(nn.Module):
         )
         self.last_ln = nn.LayerNorm(d)
         self.max_len = max_len
+        self.logit_scale = 20.0   # 余弦相似度模式下的温度（可调）
 
     def encode(self, seq):
         """返回序列表示 [B, L, d]（last_ln 之后），便于诊断/取特征"""
@@ -94,8 +96,18 @@ class SASRec(nn.Module):
         x = self.last_ln(x)
         return torch.nan_to_num(x, nan=0.0)   # 双保险：极端输入也不吐 NaN
 
-    def forward(self, seq):
-        """seq: [B, L] item id（0=padding）-> logits [B, L, V]"""
+    def forward(self, seq, norm_out=False):
+        """seq: [B, L] item id（0=padding）-> logits [B, L, V]
+
+        norm_out=True 时用余弦相似度 + 固定温度：
+        原始写法 x @ item_emb.T 的点积尺度可达 40-60，softmax 温度极低、
+        接近 one-hot，梯度只作用在最高频的几个物品上（loss 卡在 13+，学不动）。
+        归一化后尺度约 20，softmax 才有合理的梯度分布。
+        """
         x = self.encode(seq)
+        if norm_out:
+            x = F.normalize(x, dim=-1)
+            w = F.normalize(self.item_emb.weight, dim=-1)
+            return (x @ w.T) * self.logit_scale
         # 权重共享：直接和 item embedding 转置做点积
         return x @ self.item_emb.weight.T
